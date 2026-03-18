@@ -1,5 +1,19 @@
 import { useCallback, useMemo, useState } from "react";
-import { ALL_CHORDS, LEVEL_UP_DAYS } from "../constants/chords";
+import { ALL_CHORDS, DEFAULT_LEVEL_UP_DAYS } from "../constants/chords";
+
+const LEVEL_UP_DAYS_KEY = "perfect-pitch-level-up-days";
+
+function loadLevelUpDays(): number {
+  const stored: string | null = localStorage.getItem(LEVEL_UP_DAYS_KEY);
+  if (stored === null) {
+    return DEFAULT_LEVEL_UP_DAYS;
+  }
+  return Number(stored);
+}
+
+function saveLevelUpDays(days: number): void {
+  localStorage.setItem(LEVEL_UP_DAYS_KEY, String(days));
+}
 
 interface ChordStat {
   correctCount: number;
@@ -40,6 +54,7 @@ function getTodayString(): string {
 
 export function useProgress() {
   const [progress, setProgress] = useState<Progress>(loadProgress);
+  const [levelUpDays, setLevelUpDays] = useState<number>(loadLevelUpDays);
 
   const unlockedChords = useMemo(
     () => ALL_CHORDS.slice(0, progress.currentLevel),
@@ -79,7 +94,7 @@ export function useProgress() {
       const latestStat: ChordStat | undefined = newStats[latestChordId];
       const shouldLevelUp: boolean =
         latestStat !== undefined &&
-        latestStat.consecutiveCorrectDays >= LEVEL_UP_DAYS &&
+        latestStat.consecutiveCorrectDays >= levelUpDays &&
         prev.currentLevel < ALL_CHORDS.length;
 
       const newProgress: Progress = {
@@ -91,6 +106,11 @@ export function useProgress() {
       saveProgress(newProgress);
       return newProgress;
     });
+  }, [levelUpDays]);
+
+  const updateLevelUpDays = useCallback((days: number) => {
+    saveLevelUpDays(days);
+    setLevelUpDays(days);
   }, []);
 
   const resetProgress = useCallback(() => {
@@ -102,7 +122,9 @@ export function useProgress() {
   return {
     progress,
     unlockedChords,
+    levelUpDays,
     recordAnswer,
+    updateLevelUpDays,
     resetProgress,
   } as const;
 }

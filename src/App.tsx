@@ -8,7 +8,7 @@ import { PianoPlayMode } from "./components/PianoPlayMode";
 type Screen = "home" | "appPlay" | "pianoPlay";
 
 function App() {
-  const { progress, unlockedChords, recordAnswer, resetProgress } = useProgress();
+  const { progress, unlockedChords, levelUpDays, recordAnswer, updateLevelUpDays, resetProgress } = useProgress();
   const [screen, setScreen] = useState<Screen>("home");
 
   useEffect(() => {
@@ -29,8 +29,10 @@ function App() {
         <HomeScreen
           currentLevel={progress.currentLevel}
           unlockedChords={unlockedChords}
+          levelUpDays={levelUpDays}
           onStartAppMode={() => setScreen("appPlay")}
           onStartPianoMode={() => setScreen("pianoPlay")}
+          onChangeLevelUpDays={updateLevelUpDays}
           onReset={resetProgress}
         />
       )}

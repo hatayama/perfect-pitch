@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { ChordDefinition } from "../constants/chords";
 import { playChord, initSampler } from "../audio/ChordPlayer";
 import { useQuizFlow } from "../hooks/useQuizFlow";
+import { buildChoices } from "../utils/buildChoices";
 import { AnswerPanel } from "./AnswerPanel";
 import { BackButton } from "./BackButton";
 import { Feedback } from "./Feedback";
@@ -21,6 +22,10 @@ export function AppPlayMode({ unlockedChords, onAnswer, onBack }: AppPlayModePro
     handleAnswer,
   } = useQuizFlow(unlockedChords, onAnswer);
 
+  const choices: readonly ChordDefinition[] = useMemo(
+    () => buildChoices(unlockedChords),
+    [unlockedChords],
+  );
   const [ready, setReady] = useState<boolean>(false);
 
   useEffect(() => {
@@ -60,7 +65,7 @@ export function AppPlayMode({ unlockedChords, onAnswer, onBack }: AppPlayModePro
       </button>
 
       <AnswerPanel
-        chords={unlockedChords}
+        chords={choices}
         revealedId={revealedId}
         disabled={answered}
         onAnswer={handleAnswer}

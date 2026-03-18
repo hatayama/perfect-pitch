@@ -1,6 +1,7 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import type { ChordDefinition } from "../constants/chords";
 import { useQuizFlow } from "../hooks/useQuizFlow";
+import { buildChoices } from "../utils/buildChoices";
 import { PianoKeyboard } from "./PianoKeyboard";
 import { AnswerPanel } from "./AnswerPanel";
 import { BackButton } from "./BackButton";
@@ -15,6 +16,10 @@ interface PianoPlayModeProps {
 type Phase = "showKeyboard" | "waitAnswer";
 
 export function PianoPlayMode({ unlockedChords, onAnswer, onBack }: PianoPlayModeProps) {
+  const choices: readonly ChordDefinition[] = useMemo(
+    () => buildChoices(unlockedChords),
+    [unlockedChords],
+  );
   const [phase, setPhase] = useState<Phase>("showKeyboard");
 
   const onCorrectComplete = useCallback(() => {
@@ -92,7 +97,7 @@ export function PianoPlayMode({ unlockedChords, onAnswer, onBack }: PianoPlayMod
           </h2>
 
           <AnswerPanel
-            chords={unlockedChords}
+            chords={choices}
             revealedId={revealedId}
             disabled={answered}
             onAnswer={handleAnswer}

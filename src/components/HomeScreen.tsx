@@ -1,19 +1,57 @@
+import { useState } from "react";
+import { QRCodeSVG } from "qrcode.react";
 import type { ChordDefinition } from "../constants/chords";
 import { ALL_CHORDS } from "../constants/chords";
+
+function QrSection() {
+  const [showQr, setShowQr] = useState<boolean>(false);
+  const url: string = window.location.href;
+
+  return (
+    <div style={{ marginTop: "24px" }}>
+      <button
+        onClick={() => setShowQr((prev: boolean) => !prev)}
+        style={{
+          fontSize: "0.85rem",
+          color: "#666",
+          background: "none",
+          border: "1px solid #ccc",
+          borderRadius: "8px",
+          padding: "8px 16px",
+          cursor: "pointer",
+        }}
+      >
+        {showQr ? "QRコードをとじる" : "QRコードをひらく"}
+      </button>
+      {showQr && (
+        <div style={{ marginTop: "12px" }}>
+          <QRCodeSVG value={url} size={160} />
+          <p style={{ fontSize: "0.75rem", color: "#999", marginTop: "8px" }}>
+            {url}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
 
 interface HomeScreenProps {
   readonly currentLevel: number;
   readonly unlockedChords: readonly ChordDefinition[];
+  readonly levelUpDays: number;
   readonly onStartAppMode: () => void;
   readonly onStartPianoMode: () => void;
+  readonly onChangeLevelUpDays: (days: number) => void;
   readonly onReset: () => void;
 }
 
 export function HomeScreen({
   currentLevel,
   unlockedChords,
+  levelUpDays,
   onStartAppMode,
   onStartPianoMode,
+  onChangeLevelUpDays,
   onReset,
 }: HomeScreenProps) {
   return (
@@ -102,6 +140,33 @@ export function HomeScreen({
           ピアノで れんしゅう
         </button>
       </div>
+
+      {/* レベルアップ日数設定（親向け） */}
+      <div style={{
+        marginTop: "48px",
+        padding: "16px",
+        backgroundColor: "#f5f5f5",
+        borderRadius: "12px",
+        maxWidth: "300px",
+        margin: "48px auto 0",
+      }}>
+        <label style={{ fontSize: "0.85rem", color: "#666" }}>
+          レベルアップまでの日数: <strong>{levelUpDays}日</strong>
+        </label>
+        <input
+          type="range"
+          min={1}
+          max={30}
+          value={levelUpDays}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            onChangeLevelUpDays(Number(e.target.value))
+          }
+          style={{ width: "100%", marginTop: "8px" }}
+        />
+      </div>
+
+      {/* QRコード（他デバイスからのアクセス用） */}
+      <QrSection />
 
       {/* リセットボタン（親向け） */}
       <button
