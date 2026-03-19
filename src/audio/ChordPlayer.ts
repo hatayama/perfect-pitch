@@ -20,6 +20,7 @@ function unlockIOSAudio(): void {
 
 let sampler: Tone.Sampler | null = null;
 let samplerReadyPromise: Promise<void> | null = null;
+let scheduledEventIds: number[] = [];
 
 function createSampler(): Promise<void> {
   if (samplerReadyPromise !== null) {
@@ -74,17 +75,32 @@ export function initSampler(): Promise<void> {
   return createSampler();
 }
 
+function stopCurrentPlayback(): void {
+  for (const id of scheduledEventIds) {
+    Tone.getTransport().clear(id);
+  }
+  scheduledEventIds = [];
+  sampler?.releaseAll();
+}
+
 export async function playChord(notes: readonly string[]): Promise<void> {
   unlockIOSAudio();
   await Tone.start();
   await createSampler();
 
+  stopCurrentPlayback();
+
   const s: Tone.Sampler = sampler!;
+  const transport = Tone.getTransport();
   const now: number = Tone.now();
   for (let i = 0; i < CHORD_REPEAT_COUNT; i++) {
     const time: number = now + i * CHORD_INTERVAL_SEC;
-    s.triggerAttackRelease(notes as string[], CHORD_DURATION, time);
+    const eventId: number = transport.scheduleOnce(() => {
+      s.triggerAttackRelease(notes as string[], CHORD_DURATION);
+    }, time);
+    scheduledEventIds.push(eventId);
   }
+  transport.start();
 }
 
 export async function playSingleNote(note: string): Promise<void> {
