@@ -99,6 +99,9 @@ export function HomeScreen({
         >
           ピアノで れんしゅう
         </button>
+        <p style={{ fontSize: "0.75rem", color: "#aaa", margin: "-8px 0 0" }}>
+          パパママに おねがいしてね
+        </p>
       </div>
 
       {/* QRコード（他デバイスからのアクセス用） */}
