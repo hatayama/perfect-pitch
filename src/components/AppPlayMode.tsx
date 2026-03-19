@@ -51,13 +51,13 @@ export function AppPlayMode({ enabledChords, onBack }: AppPlayModeProps) {
           padding: "20px 48px",
           borderRadius: "50%",
           border: "none",
-          backgroundColor: ready ? "#2196F3" : "#ccc",
+          backgroundColor: ready ? "#37474F" : "#ccc",
           color: "#fff",
           cursor: ready ? "pointer" : "default",
           margin: "16px 0 32px",
           width: "100px",
           height: "100px",
-          boxShadow: "0 4px 12px rgba(33,150,243,0.3)",
+          boxShadow: "0 4px 12px rgba(55,71,79,0.3)",
         }}
       >
         {ready ? "♪" : "..."}
