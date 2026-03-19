@@ -63,6 +63,7 @@ function createSampler(): Promise<void> {
         C8: "C8.mp3",
       },
       release: 1,
+      volume: 10,
       baseUrl: "https://tonejs.github.io/audio/salamander/",
       onload: resolve,
     }).toDestination();
