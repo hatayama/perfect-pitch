@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { ChordDefinition } from "../constants/chords";
 import { playChord, initSampler } from "../audio/ChordPlayer";
+import { useVolume } from "../hooks/useVolume";
 import { assert } from "../utils/assert";
 import { PianoKeyboard } from "./PianoKeyboard";
 import { BackButton } from "./BackButton";
+import { VolumeSlider } from "./VolumeSlider";
 
 interface PianoPlayModeProps {
   readonly enabledChords: readonly ChordDefinition[];
@@ -21,6 +23,7 @@ export function PianoPlayMode({ enabledChords, onBack }: PianoPlayModeProps) {
     return stillValid ? selectedChord : enabledChords[0];
   }, [enabledChords, selectedChord]);
 
+  const { volume, updateVolume } = useVolume();
   const [ready, setReady] = useState<boolean>(false);
 
   useEffect(() => {
@@ -114,6 +117,8 @@ export function PianoPlayMode({ enabledChords, onBack }: PianoPlayModeProps) {
       >
         {ready ? "♪" : "..."}
       </button>
+
+      <VolumeSlider volume={volume} onChangeVolume={updateVolume} />
 
       {/* ピアノ鍵盤 */}
       <div style={{ margin: "0 auto", padding: "0 8px" }}>

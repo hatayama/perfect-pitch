@@ -2,10 +2,12 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import type { ChordDefinition } from "../constants/chords";
 import { playChord, initSampler } from "../audio/ChordPlayer";
 import { useQuizFlow } from "../hooks/useQuizFlow";
+import { useVolume } from "../hooks/useVolume";
 import { buildChoices } from "../utils/buildChoices";
 import { AnswerPanel } from "./AnswerPanel";
 import { BackButton } from "./BackButton";
 import { Feedback } from "./Feedback";
+import { VolumeSlider } from "./VolumeSlider";
 
 interface AppPlayModeProps {
   readonly enabledChords: readonly ChordDefinition[];
@@ -25,6 +27,7 @@ export function AppPlayMode({ enabledChords, onBack }: AppPlayModeProps) {
     () => buildChoices(enabledChords),
     [enabledChords],
   );
+  const { volume, updateVolume } = useVolume();
   const [ready, setReady] = useState<boolean>(false);
 
   useEffect(() => {
@@ -62,6 +65,8 @@ export function AppPlayMode({ enabledChords, onBack }: AppPlayModeProps) {
       >
         {ready ? "♪" : "..."}
       </button>
+
+      <VolumeSlider volume={volume} onChangeVolume={updateVolume} />
 
       <AnswerPanel
         chords={choices}

@@ -75,6 +75,12 @@ export function initSampler(): Promise<void> {
   return createSampler();
 }
 
+// 0〜100のパーセント値をTone.jsのデシベル値に変換して適用
+export function setVolume(percent: number): void {
+  const db: number = percent <= 0 ? -Infinity : -40 * (1 - percent / 100);
+  Tone.getDestination().volume.value = db;
+}
+
 function stopCurrentPlayback(): void {
   for (const id of scheduledEventIds) {
     Tone.getTransport().clear(id);
