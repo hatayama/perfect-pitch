@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { ChordDefinition } from "../constants/chords";
+import { playChord, initSampler } from "../audio/ChordPlayer";
 import { assert } from "../utils/assert";
 import { PianoKeyboard } from "./PianoKeyboard";
 import { BackButton } from "./BackButton";
@@ -19,6 +20,16 @@ export function PianoPlayMode({ enabledChords, onBack }: PianoPlayModeProps) {
     const stillValid: boolean = enabledChords.some((c: ChordDefinition) => c.id === selectedChord.id);
     return stillValid ? selectedChord : enabledChords[0];
   }, [enabledChords, selectedChord]);
+
+  const [ready, setReady] = useState<boolean>(false);
+
+  useEffect(() => {
+    initSampler().then(() => setReady(true));
+  }, []);
+
+  const handlePlay = useCallback(() => {
+    playChord(activeChord.notes);
+  }, [activeChord]);
 
   // 黒(#212121)だと鍵盤のハイライトが見えにくいため、少し明るいグレーを使う
   const highlightColor: string = activeChord.colorHex === "#212121"
@@ -81,6 +92,28 @@ export function PianoPlayMode({ enabledChords, onBack }: PianoPlayModeProps) {
       }}>
         {activeChord.colorName} — {activeChord.label}
       </div>
+
+      {/* 再生ボタン */}
+      <button
+        onClick={handlePlay}
+        disabled={!ready}
+        style={{
+          fontSize: "2rem",
+          padding: "16px",
+          borderRadius: "50%",
+          border: "none",
+          backgroundColor: ready ? "#2196F3" : "#ccc",
+          color: "#fff",
+          cursor: ready ? "pointer" : "default",
+          width: "80px",
+          height: "80px",
+          margin: "0 auto 16px",
+          boxShadow: "0 4px 12px rgba(33,150,243,0.3)",
+          display: "block",
+        }}
+      >
+        {ready ? "♪" : "..."}
+      </button>
 
       {/* ピアノ鍵盤 */}
       <div style={{ margin: "0 auto", padding: "0 8px" }}>
