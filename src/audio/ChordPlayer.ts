@@ -4,6 +4,20 @@ const CHORD_REPEAT_COUNT = 3;
 const CHORD_DURATION = "2n";
 const CHORD_INTERVAL_SEC = 1.2;
 
+// iOSの消音モードでもWeb Audio APIの音を鳴らすため、HTML5 Audio要素で無音を再生して音声セッションを"playback"に切り替える
+const SILENT_MP3 = "data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAABhgC7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7//////////////////////////////////////////////////////////////////8AAAAATGF2YzU4LjEzAAAAAAAAAAAAAAAAJAAAAAAAAAAAAYYoRBqJAAAAAAAAAAAAAAAAAAAA//tQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAABhgC7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7//////////////////////////////////////////////////////////////////8AAAAATGF2YzU4LjEzAAAAAAAAAAAAAAAAJAAAAAAAAAAAAYYoRBqJAAAAAAAAAAAAAAAAAAAA";
+let silentAudioUnlocked = false;
+
+function unlockIOSAudio(): void {
+  if (silentAudioUnlocked) return;
+  silentAudioUnlocked = true;
+
+  const audio: HTMLAudioElement = new Audio(SILENT_MP3);
+  audio.play().catch(() => {
+    // 再生失敗は無視（非iOS環境では不要なため）
+  });
+}
+
 let sampler: Tone.Sampler | null = null;
 let samplerReadyPromise: Promise<void> | null = null;
 
@@ -61,6 +75,7 @@ export function initSampler(): Promise<void> {
 }
 
 export async function playChord(notes: readonly string[]): Promise<void> {
+  unlockIOSAudio();
   await Tone.start();
   await createSampler();
 
@@ -73,6 +88,7 @@ export async function playChord(notes: readonly string[]): Promise<void> {
 }
 
 export async function playSingleNote(note: string): Promise<void> {
+  unlockIOSAudio();
   await Tone.start();
   await createSampler();
 
