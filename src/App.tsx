@@ -1,14 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
-import { useProgress } from "./hooks/useProgress";
+import { useEnabledChords } from "./hooks/useEnabledChords";
 import { initSampler } from "./audio/ChordPlayer";
 import { HomeScreen } from "./components/HomeScreen";
 import { AppPlayMode } from "./components/AppPlayMode";
 import { PianoPlayMode } from "./components/PianoPlayMode";
+import { AuthGate } from "./components/AuthGate";
+import { SettingsScreen } from "./components/SettingsScreen";
 
-type Screen = "home" | "appPlay" | "pianoPlay";
+type Screen = "home" | "appPlay" | "pianoPlay" | "authGate" | "settings";
 
 function App() {
-  const { progress, unlockedChords, levelUpDays, recordAnswer, updateLevelUpDays, resetProgress } = useProgress();
+  const { enabledChords, enabledChordIds, toggleChord, resetToDefault } = useEnabledChords();
   const [screen, setScreen] = useState<Screen>("home");
 
   useEffect(() => {
@@ -27,28 +29,38 @@ function App() {
     }}>
       {screen === "home" && (
         <HomeScreen
-          currentLevel={progress.currentLevel}
-          unlockedChords={unlockedChords}
-          levelUpDays={levelUpDays}
           onStartAppMode={() => setScreen("appPlay")}
           onStartPianoMode={() => setScreen("pianoPlay")}
-          onChangeLevelUpDays={updateLevelUpDays}
-          onReset={resetProgress}
+          onOpenSettings={() => setScreen("authGate")}
         />
       )}
 
       {screen === "appPlay" && (
         <AppPlayMode
-          unlockedChords={unlockedChords}
-          onAnswer={recordAnswer}
+          enabledChords={enabledChords}
           onBack={goHome}
         />
       )}
 
       {screen === "pianoPlay" && (
         <PianoPlayMode
-          unlockedChords={unlockedChords}
-          onAnswer={recordAnswer}
+          enabledChords={enabledChords}
+          onBack={goHome}
+        />
+      )}
+
+      {screen === "authGate" && (
+        <AuthGate
+          onSuccess={() => setScreen("settings")}
+          onCancel={goHome}
+        />
+      )}
+
+      {screen === "settings" && (
+        <SettingsScreen
+          enabledChordIds={enabledChordIds}
+          onToggleChord={toggleChord}
+          onResetToDefault={resetToDefault}
           onBack={goHome}
         />
       )}

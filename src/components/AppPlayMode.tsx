@@ -8,23 +8,22 @@ import { BackButton } from "./BackButton";
 import { Feedback } from "./Feedback";
 
 interface AppPlayModeProps {
-  readonly unlockedChords: readonly ChordDefinition[];
-  readonly onAnswer: (chordId: string, correct: boolean) => void;
+  readonly enabledChords: readonly ChordDefinition[];
   readonly onBack: () => void;
 }
 
-export function AppPlayMode({ unlockedChords, onAnswer, onBack }: AppPlayModeProps) {
+export function AppPlayMode({ enabledChords, onBack }: AppPlayModeProps) {
   const {
     currentChord,
     feedbackResult,
     revealedId,
     answered,
     handleAnswer,
-  } = useQuizFlow(unlockedChords, onAnswer);
+  } = useQuizFlow(enabledChords);
 
   const choices: readonly ChordDefinition[] = useMemo(
-    () => buildChoices(unlockedChords),
-    [unlockedChords],
+    () => buildChoices(enabledChords),
+    [enabledChords],
   );
   const [ready, setReady] = useState<boolean>(false);
 

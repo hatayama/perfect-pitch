@@ -1,21 +1,21 @@
 import { ALL_CHORDS, MIN_CHOICES, type ChordDefinition } from "../constants/chords";
 import { assert } from "./assert";
 
-// アンロック済みが少ない場合、未アンロックの和音をダミー選択肢として追加して最低数を確保する
-export function buildChoices(unlockedChords: readonly ChordDefinition[]): readonly ChordDefinition[] {
-  assert(unlockedChords.length > 0, "unlockedChords must not be empty");
+// 有効な和音が少ない場合、無効な和音をダミー選択肢として追加して最低数を確保する
+export function buildChoices(enabledChords: readonly ChordDefinition[]): readonly ChordDefinition[] {
+  assert(enabledChords.length > 0, "enabledChords must not be empty");
 
-  if (unlockedChords.length >= MIN_CHOICES) {
-    return unlockedChords;
+  if (enabledChords.length >= MIN_CHOICES) {
+    return enabledChords;
   }
 
-  const unlockedIds: Set<string> = new Set(unlockedChords.map((c: ChordDefinition) => c.id));
+  const enabledIds: Set<string> = new Set(enabledChords.map((c: ChordDefinition) => c.id));
   const extras: ChordDefinition[] = ALL_CHORDS.filter(
-    (c: ChordDefinition) => !unlockedIds.has(c.id),
+    (c: ChordDefinition) => !enabledIds.has(c.id),
   );
 
-  const needed: number = MIN_CHOICES - unlockedChords.length;
+  const needed: number = MIN_CHOICES - enabledChords.length;
   const fillers: ChordDefinition[] = extras.slice(0, needed);
 
-  return [...unlockedChords, ...fillers];
+  return [...enabledChords, ...fillers];
 }

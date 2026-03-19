@@ -15,12 +15,11 @@ interface QuizFlowResult {
 }
 
 export function useQuizFlow(
-  unlockedChords: readonly ChordDefinition[],
-  onAnswer: (chordId: string, correct: boolean) => void,
+  chords: readonly ChordDefinition[],
   onCorrectComplete?: () => void,
 ): QuizFlowResult {
   const [currentChord, setCurrentChord] = useState<ChordDefinition>(() =>
-    pickRandomChord(unlockedChords, null)
+    pickRandomChord(chords, null)
   );
   const [feedbackResult, setFeedbackResult] = useState<boolean | null>(null);
   const [revealedId, setRevealedId] = useState<string | null>(null);
@@ -45,13 +44,11 @@ export function useQuizFlow(
       setRevealedId(selected.id);
     }
 
-    onAnswer(currentChord.id, correct);
-
     clearPendingTimer();
     timerRef.current = setTimeout(() => {
       setFeedbackResult(null);
       if (correct) {
-        const next: ChordDefinition = pickRandomChord(unlockedChords, currentChord.id);
+        const next: ChordDefinition = pickRandomChord(chords, currentChord.id);
         setCurrentChord(next);
         setRevealedId(null);
         setAnswered(false);
@@ -60,16 +57,16 @@ export function useQuizFlow(
         setAnswered(false);
       }
     }, correct ? FEEDBACK_DELAY_CORRECT : FEEDBACK_DELAY_INCORRECT);
-  }, [answered, currentChord, unlockedChords, onAnswer, onCorrectComplete, clearPendingTimer]);
+  }, [answered, currentChord, chords, onCorrectComplete, clearPendingTimer]);
 
   const resetForNextRound = useCallback(() => {
     clearPendingTimer();
-    const next: ChordDefinition = pickRandomChord(unlockedChords, currentChord.id);
+    const next: ChordDefinition = pickRandomChord(chords, currentChord.id);
     setCurrentChord(next);
     setRevealedId(null);
     setAnswered(false);
     setFeedbackResult(null);
-  }, [unlockedChords, currentChord, clearPendingTimer]);
+  }, [chords, currentChord, clearPendingTimer]);
 
   return {
     currentChord,

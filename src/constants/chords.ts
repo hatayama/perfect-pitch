@@ -31,6 +31,4 @@ const BLACK_KEY_CHORDS: readonly ChordDefinition[] = [
 
 export const ALL_CHORDS: readonly ChordDefinition[] = [...WHITE_KEY_CHORDS, ...BLACK_KEY_CHORDS];
 
-export const DEFAULT_LEVEL_UP_DAYS = 14;
-
 export const MIN_CHOICES = 3;

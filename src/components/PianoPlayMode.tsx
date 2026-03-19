@@ -8,17 +8,16 @@ import { BackButton } from "./BackButton";
 import { Feedback } from "./Feedback";
 
 interface PianoPlayModeProps {
-  readonly unlockedChords: readonly ChordDefinition[];
-  readonly onAnswer: (chordId: string, correct: boolean) => void;
+  readonly enabledChords: readonly ChordDefinition[];
   readonly onBack: () => void;
 }
 
 type Phase = "showKeyboard" | "waitAnswer";
 
-export function PianoPlayMode({ unlockedChords, onAnswer, onBack }: PianoPlayModeProps) {
+export function PianoPlayMode({ enabledChords, onBack }: PianoPlayModeProps) {
   const choices: readonly ChordDefinition[] = useMemo(
-    () => buildChoices(unlockedChords),
-    [unlockedChords],
+    () => buildChoices(enabledChords),
+    [enabledChords],
   );
   const [phase, setPhase] = useState<Phase>("showKeyboard");
 
@@ -32,7 +31,7 @@ export function PianoPlayMode({ unlockedChords, onAnswer, onBack }: PianoPlayMod
     revealedId,
     answered,
     handleAnswer,
-  } = useQuizFlow(unlockedChords, onAnswer, onCorrectComplete);
+  } = useQuizFlow(enabledChords, onCorrectComplete);
 
   const handlePlayed = useCallback(() => {
     setPhase("waitAnswer");
