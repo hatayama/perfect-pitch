@@ -39,7 +39,7 @@ export function AppPlayMode({ enabledChords, onBack }: AppPlayModeProps) {
     <div style={{ textAlign: "center", padding: "16px" }}>
       <BackButton onClick={onBack} />
 
-      <h2 style={{ marginTop: "48px", fontSize: "1.6rem", color: "#333" }}>
+      <h2 style={{ marginTop: "48px", fontSize: "1.6rem", color: "#e0e0e0" }}>
         きいてみよう！
       </h2>
 
@@ -51,13 +51,13 @@ export function AppPlayMode({ enabledChords, onBack }: AppPlayModeProps) {
           padding: "20px 48px",
           borderRadius: "50%",
           border: "none",
-          backgroundColor: ready ? "#37474F" : "#ccc",
+          backgroundColor: ready ? "#546E7A" : "#444",
           color: "#fff",
           cursor: ready ? "pointer" : "default",
           margin: "16px 0 32px",
           width: "100px",
           height: "100px",
-          boxShadow: "0 4px 12px rgba(55,71,79,0.3)",
+          boxShadow: "0 4px 12px rgba(84,110,122,0.4)",
         }}
       >
         {ready ? "♪" : "..."}

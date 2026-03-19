@@ -40,7 +40,7 @@ export function PianoPlayMode({ enabledChords, onBack }: PianoPlayModeProps) {
     <div style={{ textAlign: "center", padding: "16px" }}>
       <BackButton onClick={onBack} />
 
-      <h2 style={{ marginTop: "48px", fontSize: "1.4rem", color: "#333" }}>
+      <h2 style={{ marginTop: "48px", fontSize: "1.4rem", color: "#e0e0e0" }}>
         ひく おとを えらんでね
       </h2>
 
@@ -62,7 +62,7 @@ export function PianoPlayMode({ enabledChords, onBack }: PianoPlayModeProps) {
               style={{
                 backgroundColor: chord.colorHex,
                 color: chord.textColor,
-                border: isSelected ? "3px solid #333" : "3px solid transparent",
+                border: isSelected ? "3px solid #e0e0e0" : "3px solid transparent",
                 borderRadius: "12px",
                 padding: "12px 8px",
                 fontSize: "0.85rem",
@@ -102,13 +102,13 @@ export function PianoPlayMode({ enabledChords, onBack }: PianoPlayModeProps) {
           padding: "16px",
           borderRadius: "50%",
           border: "none",
-          backgroundColor: ready ? "#2196F3" : "#ccc",
+          backgroundColor: ready ? "#546E7A" : "#444",
           color: "#fff",
           cursor: ready ? "pointer" : "default",
           width: "80px",
           height: "80px",
           margin: "0 auto 16px",
-          boxShadow: "0 4px 12px rgba(33,150,243,0.3)",
+          boxShadow: "0 4px 12px rgba(84,110,122,0.4)",
           display: "block",
         }}
       >

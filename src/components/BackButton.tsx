@@ -10,7 +10,7 @@ const STYLE: React.CSSProperties = {
   background: "none",
   border: "none",
   cursor: "pointer",
-  color: "#666",
+  color: "#aaa",
 };
 
 export function BackButton({ onClick }: BackButtonProps) {

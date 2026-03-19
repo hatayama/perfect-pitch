@@ -8,7 +8,7 @@ export function PageLayout({ children }: PageLayoutProps) {
   return (
     <div style={{
       minHeight: "100dvh",
-      backgroundColor: "#FAFAFA",
+      backgroundColor: "#121212",
       fontFamily: "'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif",
     }}>
       {children}
