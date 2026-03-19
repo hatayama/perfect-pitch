@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { useEnabledChords } from "./hooks/useEnabledChords";
+import { useHashRouter } from "./hooks/useHashRouter";
 import { initSampler } from "./audio/ChordPlayer";
 import { HomeScreen } from "./components/HomeScreen";
 import { AppPlayMode } from "./components/AppPlayMode";
@@ -7,19 +8,17 @@ import { PianoPlayMode } from "./components/PianoPlayMode";
 import { AuthGate } from "./components/AuthGate";
 import { SettingsScreen } from "./components/SettingsScreen";
 
-type Screen = "home" | "appPlay" | "pianoPlay" | "authGate" | "settings";
-
 function App() {
   const { enabledChords, enabledChordIds, toggleChord, resetToDefault } = useEnabledChords();
-  const [screen, setScreen] = useState<Screen>("home");
+  const { route, navigate } = useHashRouter();
 
   useEffect(() => {
     initSampler();
   }, []);
 
   const goHome = useCallback(() => {
-    setScreen("home");
-  }, []);
+    navigate("home");
+  }, [navigate]);
 
   return (
     <div style={{
@@ -27,36 +26,36 @@ function App() {
       backgroundColor: "#FAFAFA",
       fontFamily: "'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif",
     }}>
-      {screen === "home" && (
+      {route === "home" && (
         <HomeScreen
-          onStartAppMode={() => setScreen("appPlay")}
-          onStartPianoMode={() => setScreen("pianoPlay")}
-          onOpenSettings={() => setScreen("authGate")}
+          onStartAppMode={() => navigate("app-play")}
+          onStartPianoMode={() => navigate("piano-play")}
+          onOpenSettings={() => navigate("auth")}
         />
       )}
 
-      {screen === "appPlay" && (
+      {route === "app-play" && (
         <AppPlayMode
           enabledChords={enabledChords}
           onBack={goHome}
         />
       )}
 
-      {screen === "pianoPlay" && (
+      {route === "piano-play" && (
         <PianoPlayMode
           enabledChords={enabledChords}
           onBack={goHome}
         />
       )}
 
-      {screen === "authGate" && (
+      {route === "auth" && (
         <AuthGate
-          onSuccess={() => setScreen("settings")}
+          onSuccess={() => navigate("settings")}
           onCancel={goHome}
         />
       )}
 
-      {screen === "settings" && (
+      {route === "settings" && (
         <SettingsScreen
           enabledChordIds={enabledChordIds}
           onToggleChord={toggleChord}
