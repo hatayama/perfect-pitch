@@ -43,11 +43,11 @@ export function AuthGate({ onSuccess, onCancel }: AuthGateProps) {
     }}>
       <BackButton onClick={onCancel} />
 
-      <h2 style={{ marginTop: "48px", fontSize: "1.4rem", color: "#e0e0e0" }}>
+      <h2 style={{ marginTop: "48px", fontSize: "1.4rem", color: "var(--text-primary)" }}>
         おとなの かくにん
       </h2>
 
-      <p style={{ fontSize: "2rem", margin: "32px 0 16px", color: "#e0e0e0" }}>
+      <p style={{ fontSize: "2rem", margin: "32px 0 16px", color: "var(--text-primary)" }}>
         {problem.a} × {problem.b} = ?
       </p>
 
@@ -66,9 +66,9 @@ export function AuthGate({ onSuccess, onCancel }: AuthGateProps) {
           width: "120px",
           textAlign: "center",
           borderRadius: "12px",
-          border: "2px solid #555",
-          backgroundColor: "#1e1e1e",
-          color: "#e0e0e0",
+          border: "2px solid var(--border-default)",
+          backgroundColor: "var(--bg-input)",
+          color: "var(--text-primary)",
           outline: "none",
         }}
         autoFocus
@@ -83,7 +83,7 @@ export function AuthGate({ onSuccess, onCancel }: AuthGateProps) {
             padding: "12px 32px",
             borderRadius: "12px",
             border: "none",
-            backgroundColor: input === "" ? "#444" : "#2196F3",
+            backgroundColor: input === "" ? "var(--bg-disabled)" : "#2196F3",
             color: "#fff",
             cursor: input === "" ? "default" : "pointer",
           }}
@@ -93,7 +93,7 @@ export function AuthGate({ onSuccess, onCancel }: AuthGateProps) {
       </div>
 
       {showError && (
-        <p style={{ color: "#EF5350", fontSize: "1.1rem", marginTop: "16px" }}>
+        <p style={{ color: "var(--error)", fontSize: "1.1rem", marginTop: "16px" }}>
           ちがうよ、もういちど！
         </p>
       )}

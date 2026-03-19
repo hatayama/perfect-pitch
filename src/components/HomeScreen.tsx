@@ -11,9 +11,9 @@ function QrSection() {
         onClick={() => setShowQr((prev: boolean) => !prev)}
         style={{
           fontSize: "0.85rem",
-          color: "#aaa",
+          color: "var(--text-muted)",
           background: "none",
-          border: "1px solid #555",
+          border: "1px solid var(--border-default)",
           borderRadius: "8px",
           padding: "8px 16px",
           cursor: "pointer",
@@ -23,8 +23,8 @@ function QrSection() {
       </button>
       {showQr && (
         <div style={{ marginTop: "12px" }}>
-          <QRCodeSVG value={url} size={160} bgColor="#121212" fgColor="#e0e0e0" />
-          <p style={{ fontSize: "0.75rem", color: "#777", marginTop: "8px" }}>
+          <QRCodeSVG value={url} size={160} bgColor="var(--qr-bg)" fgColor="var(--qr-fg)" />
+          <p style={{ fontSize: "0.75rem", color: "var(--text-tertiary)", marginTop: "8px" }}>
             {url}
           </p>
         </div>
@@ -53,12 +53,12 @@ export function HomeScreen({
     }}>
       <h1 style={{
         fontSize: "2rem",
-        color: "#e0e0e0",
+        color: "var(--text-primary)",
         marginBottom: "8px",
       }}>
         ぜったいおんかん
       </h1>
-      <p style={{ color: "#888", fontSize: "0.9rem", marginBottom: "32px" }}>
+      <p style={{ color: "var(--text-secondary)", fontSize: "0.9rem", marginBottom: "32px" }}>
         れんしゅう
       </p>
 
@@ -99,7 +99,7 @@ export function HomeScreen({
         >
           ピアノで れんしゅう
         </button>
-        <p style={{ fontSize: "0.75rem", color: "#777", margin: "-8px 0 0" }}>
+        <p style={{ fontSize: "0.75rem", color: "var(--text-tertiary)", margin: "-8px 0 0" }}>
           パパママに おねがいしてね
         </p>
       </div>
@@ -113,7 +113,7 @@ export function HomeScreen({
         style={{
           marginTop: "48px",
           fontSize: "0.85rem",
-          color: "#777",
+          color: "var(--text-tertiary)",
           background: "none",
           border: "none",
           cursor: "pointer",

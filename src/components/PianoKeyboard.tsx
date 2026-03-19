@@ -92,11 +92,13 @@ export function PianoKeyboard({ highlightNotes, highlightColor }: PianoKeyboardP
             y={0}
             width={38}
             height={WHITE_KEY_HEIGHT}
-            fill={highlighted ? highlightColor : "#d4d4d4"}
-            stroke="#555"
-            strokeWidth={1.5}
             rx={0}
             ry={4}
+            style={{
+              fill: highlighted ? highlightColor : "var(--piano-white)",
+              stroke: "var(--piano-white-stroke)",
+              strokeWidth: 1.5,
+            }}
           />
         );
       })}
@@ -109,11 +111,13 @@ export function PianoKeyboard({ highlightNotes, highlightColor }: PianoKeyboardP
             y={0}
             width={BLACK_KEY_WIDTH}
             height={BLACK_KEY_HEIGHT}
-            fill={highlighted ? highlightColor : "#1a1a1a"}
-            stroke="#333"
-            strokeWidth={1}
             rx={0}
             ry={3}
+            style={{
+              fill: highlighted ? highlightColor : "var(--piano-black)",
+              stroke: "var(--piano-black-stroke)",
+              strokeWidth: 1,
+            }}
           />
         );
       })}

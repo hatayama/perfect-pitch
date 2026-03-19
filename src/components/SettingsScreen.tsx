@@ -25,7 +25,7 @@ export function SettingsScreen({
     }}>
       <BackButton onClick={onBack} />
 
-      <h2 style={{ marginTop: "48px", fontSize: "1.4rem", color: "#e0e0e0", marginBottom: "24px" }}>
+      <h2 style={{ marginTop: "48px", fontSize: "1.4rem", color: "var(--text-primary)", marginBottom: "24px" }}>
         おとの せってい
       </h2>
 
@@ -49,8 +49,8 @@ export function SettingsScreen({
                 alignItems: "center",
                 padding: "10px 16px",
                 borderRadius: "12px",
-                backgroundColor: enabled ? "#1e1e1e" : "#161616",
-                border: enabled ? "1px solid #444" : "1px solid #333",
+                backgroundColor: enabled ? "var(--bg-card)" : "var(--bg-card-disabled)",
+                border: enabled ? "1px solid var(--border-light)" : "1px solid var(--border-subtle)",
               }}
             >
               <div style={{
@@ -58,7 +58,7 @@ export function SettingsScreen({
                 height: "28px",
                 borderRadius: "50%",
                 backgroundColor: chord.colorHex,
-                border: "2px solid #666",
+                border: "2px solid var(--text-muted)",
                 flexShrink: 0,
                 opacity: enabled ? 1 : 0.3,
               }} />
@@ -68,10 +68,10 @@ export function SettingsScreen({
                 textAlign: "left",
                 marginLeft: "12px",
                 fontSize: "1rem",
-                color: enabled ? "#e0e0e0" : "#666",
+                color: enabled ? "var(--text-primary)" : "var(--text-muted)",
               }}>
                 {chord.label}
-                <span style={{ fontSize: "0.8rem", color: "#888", marginLeft: "8px" }}>
+                <span style={{ fontSize: "0.8rem", color: "var(--text-secondary)", marginLeft: "8px" }}>
                   {chord.colorName}
                 </span>
               </span>
@@ -85,8 +85,8 @@ export function SettingsScreen({
                   border: "none",
                   fontSize: "0.85rem",
                   cursor: isLastEnabled ? "not-allowed" : "pointer",
-                  backgroundColor: enabled ? "#4CAF50" : "#444",
-                  color: enabled ? "#fff" : "#888",
+                  backgroundColor: enabled ? "#4CAF50" : "var(--bg-disabled)",
+                  color: enabled ? "#fff" : "var(--text-secondary)",
                   opacity: isLastEnabled ? 0.5 : 1,
                 }}
               >
@@ -104,9 +104,9 @@ export function SettingsScreen({
           fontSize: "0.9rem",
           padding: "10px 24px",
           borderRadius: "10px",
-          border: "1px solid #555",
-          backgroundColor: "#1e1e1e",
-          color: "#aaa",
+          border: "1px solid var(--border-default)",
+          backgroundColor: "var(--bg-card)",
+          color: "var(--text-muted)",
           cursor: "pointer",
         }}
       >
