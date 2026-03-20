@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { setVolume as applyVolume } from "../audio/ChordPlayer";
 
 const STORAGE_KEY = "perfect-pitch-volume";
-const DEFAULT_VOLUME = 80;
+const DEFAULT_VOLUME = 50;
 
 function loadVolume(): number {
   const stored: string | null = localStorage.getItem(STORAGE_KEY);

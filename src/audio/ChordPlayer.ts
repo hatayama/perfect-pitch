@@ -3,6 +3,7 @@ import * as Tone from "tone";
 const CHORD_REPEAT_COUNT = 3;
 const CHORD_DURATION = "2n";
 const CHORD_INTERVAL_SEC = 1.2;
+const SAMPLER_BASE_VOLUME_DB = 16;
 
 // iOSの消音モードでもWeb Audio APIの音を鳴らすため、HTML5 Audio要素で無音を再生して音声セッションを"playback"に切り替える
 const SILENT_MP3 = "data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAABhgC7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7//////////////////////////////////////////////////////////////////8AAAAATGF2YzU4LjEzAAAAAAAAAAAAAAAAJAAAAAAAAAAAAYYoRBqJAAAAAAAAAAAAAAAAAAAA//tQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAABhgC7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7//////////////////////////////////////////////////////////////////8AAAAATGF2YzU4LjEzAAAAAAAAAAAAAAAAJAAAAAAAAAAAAYYoRBqJAAAAAAAAAAAAAAAAAAAA";
@@ -63,7 +64,8 @@ function createSampler(): Promise<void> {
         C8: "C8.mp3",
       },
       release: 1,
-      volume: 10,
+      // 端末側の音量を上げにくい場面でも聞き取りやすくしたいので、基準出力を約2倍相当に上げる
+      volume: SAMPLER_BASE_VOLUME_DB,
       baseUrl: "https://tonejs.github.io/audio/salamander/",
       onload: resolve,
     }).toDestination();
