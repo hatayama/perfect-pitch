@@ -67,15 +67,18 @@ export function HomeScreen({
         <button
           onClick={onStartAppMode}
           style={{
-            fontSize: "1.4rem",
-            padding: "20px 48px",
+            fontSize: "1.3rem",
+            fontWeight: 800,
+            letterSpacing: "0.03em",
+            whiteSpace: "nowrap",
+            padding: "20px 32px",
             borderRadius: "20px",
             border: "none",
             backgroundColor: "#2196F3",
             color: "#fff",
             cursor: "pointer",
             width: "100%",
-            maxWidth: "300px",
+            maxWidth: "340px",
             boxShadow: "0 4px 12px rgba(33,150,243,0.3)",
           }}
         >
@@ -85,15 +88,18 @@ export function HomeScreen({
         <button
           onClick={onStartPianoMode}
           style={{
-            fontSize: "1.4rem",
-            padding: "20px 48px",
+            fontSize: "1.3rem",
+            fontWeight: 800,
+            letterSpacing: "0.03em",
+            whiteSpace: "nowrap",
+            padding: "20px 32px",
             borderRadius: "20px",
             border: "none",
             backgroundColor: "#4CAF50",
             color: "#fff",
             cursor: "pointer",
             width: "100%",
-            maxWidth: "300px",
+            maxWidth: "340px",
             boxShadow: "0 4px 12px rgba(76,175,80,0.3)",
           }}
         >
