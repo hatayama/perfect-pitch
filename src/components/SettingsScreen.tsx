@@ -60,7 +60,8 @@ export function SettingsScreen({
                 backgroundColor: chord.colorHex,
                 border: "2px solid var(--text-muted)",
                 flexShrink: 0,
-                opacity: enabled ? 1 : 0.3,
+                opacity: enabled ? 1 : 0.72,
+                filter: enabled ? "none" : "brightness(0.82) saturate(0.9)",
               }} />
 
               <span style={{
@@ -110,7 +111,7 @@ export function SettingsScreen({
           cursor: "pointer",
         }}
       >
-        すべて ON にする
+        デフォルトにもどす
       </button>
     </div>
   );

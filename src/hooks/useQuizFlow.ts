@@ -1,17 +1,19 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { ChordDefinition } from "../constants/chords";
+import { playCorrectSe, playIncorrectSe } from "../audio/ChordPlayer";
 import { pickRandomChord } from "../utils/pickRandomChord";
 
 const FEEDBACK_DELAY_CORRECT = 1500;
 const FEEDBACK_DELAY_INCORRECT = 2000;
+type QuizPhase = "waitingForPrompt" | "readyToAnswer" | "showingCorrect" | "showingIncorrect";
 
 interface QuizFlowResult {
   currentChord: ChordDefinition;
   feedbackResult: boolean | null;
   revealedId: string | null;
-  answered: boolean;
+  answerDisabled: boolean;
   handleAnswer: (selected: ChordDefinition) => void;
-  resetForNextRound: () => void;
+  markPromptPlayed: () => void;
 }
 
 export function useQuizFlow(
@@ -23,7 +25,7 @@ export function useQuizFlow(
   );
   const [feedbackResult, setFeedbackResult] = useState<boolean | null>(null);
   const [revealedId, setRevealedId] = useState<string | null>(null);
-  const [answered, setAnswered] = useState<boolean>(false);
+  const [phase, setPhase] = useState<QuizPhase>("waitingForPrompt");
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const clearPendingTimer = useCallback(() => {
@@ -33,15 +35,21 @@ export function useQuizFlow(
     }
   }, []);
 
+  useEffect(() => clearPendingTimer, [clearPendingTimer]);
+
   const handleAnswer = useCallback((selected: ChordDefinition) => {
-    if (answered) return;
+    if (phase !== "readyToAnswer") return;
 
     const correct: boolean = selected.id === currentChord.id;
-    setAnswered(true);
     setFeedbackResult(correct);
 
     if (correct) {
       setRevealedId(selected.id);
+      setPhase("showingCorrect");
+      void playCorrectSe();
+    } else {
+      setPhase("showingIncorrect");
+      void playIncorrectSe();
     }
 
     clearPendingTimer();
@@ -51,29 +59,26 @@ export function useQuizFlow(
         const next: ChordDefinition = pickRandomChord(chords, currentChord.id);
         setCurrentChord(next);
         setRevealedId(null);
-        setAnswered(false);
+        setPhase("waitingForPrompt");
         onCorrectComplete?.();
       } else {
-        setAnswered(false);
+        setPhase("readyToAnswer");
       }
     }, correct ? FEEDBACK_DELAY_CORRECT : FEEDBACK_DELAY_INCORRECT);
-  }, [answered, currentChord, chords, onCorrectComplete, clearPendingTimer]);
+  }, [phase, currentChord, chords, onCorrectComplete, clearPendingTimer]);
 
-  const resetForNextRound = useCallback(() => {
-    clearPendingTimer();
-    const next: ChordDefinition = pickRandomChord(chords, currentChord.id);
-    setCurrentChord(next);
-    setRevealedId(null);
-    setAnswered(false);
-    setFeedbackResult(null);
-  }, [chords, currentChord, clearPendingTimer]);
+  const markPromptPlayed = useCallback(() => {
+    setPhase((currentPhase: QuizPhase) => (
+      currentPhase === "waitingForPrompt" ? "readyToAnswer" : currentPhase
+    ));
+  }, []);
 
   return {
     currentChord,
     feedbackResult,
     revealedId,
-    answered,
+    answerDisabled: phase !== "readyToAnswer",
     handleAnswer,
-    resetForNextRound,
+    markPromptPlayed,
   };
 }

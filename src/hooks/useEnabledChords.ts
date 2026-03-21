@@ -5,6 +5,10 @@ import { assert } from "../utils/assert";
 const STORAGE_KEY = "perfect-pitch-enabled-chords";
 
 const ALL_CHORD_IDS: ReadonlySet<string> = new Set(ALL_CHORDS.map((c: ChordDefinition) => c.id));
+const DEFAULT_ENABLED_CHORD_IDS: ReadonlySet<string> = new Set<string>([
+  "do-mi-so",
+  "do-fa-ra",
+]);
 
 // 旧バージョンのLocalStorageキーを削除（モジュール読み込み時に1回だけ実行）
 localStorage.removeItem("perfect-pitch-progress");
@@ -13,12 +17,12 @@ localStorage.removeItem("perfect-pitch-level-up-days");
 function loadEnabledIds(): ReadonlySet<string> {
   const stored: string | null = localStorage.getItem(STORAGE_KEY);
   if (stored === null) {
-    return ALL_CHORD_IDS;
+    return DEFAULT_ENABLED_CHORD_IDS;
   }
 
   const parsed: unknown = JSON.parse(stored);
   if (!Array.isArray(parsed) || parsed.length === 0) {
-    return ALL_CHORD_IDS;
+    return DEFAULT_ENABLED_CHORD_IDS;
   }
 
   // 現在のALL_CHORDSに存在するIDのみを残す
@@ -27,7 +31,7 @@ function loadEnabledIds(): ReadonlySet<string> {
   );
 
   if (validIds.size === 0) {
-    return ALL_CHORD_IDS;
+    return DEFAULT_ENABLED_CHORD_IDS;
   }
 
   assert(validIds.size > 0, "loadEnabledIds must return non-empty set");
@@ -66,8 +70,8 @@ export function useEnabledChords() {
   }, []);
 
   const resetToDefault = useCallback(() => {
-    saveEnabledIds(ALL_CHORD_IDS);
-    setEnabledChordIds(ALL_CHORD_IDS);
+    saveEnabledIds(DEFAULT_ENABLED_CHORD_IDS);
+    setEnabledChordIds(DEFAULT_ENABLED_CHORD_IDS);
   }, []);
 
   return {

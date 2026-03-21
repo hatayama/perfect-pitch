@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { ChordDefinition } from "../constants/chords";
-import { playChord, initSampler } from "../audio/ChordPlayer";
+import { playChord, initSampler, prepareAudioPlayback } from "../audio/ChordPlayer";
 import { useQuizFlow } from "../hooks/useQuizFlow";
 import { useVolume } from "../hooks/useVolume";
 import { buildChoices } from "../utils/buildChoices";
@@ -19,8 +19,9 @@ export function AppPlayMode({ enabledChords, onBack }: AppPlayModeProps) {
     currentChord,
     feedbackResult,
     revealedId,
-    answered,
+    answerDisabled,
     handleAnswer,
+    markPromptPlayed,
   } = useQuizFlow(enabledChords);
 
   const choices: readonly ChordDefinition[] = useMemo(
@@ -34,9 +35,10 @@ export function AppPlayMode({ enabledChords, onBack }: AppPlayModeProps) {
     initSampler().then(() => setReady(true));
   }, []);
 
-  const handlePlay = useCallback(() => {
-    playChord(currentChord.notes);
-  }, [currentChord]);
+  const handlePlay = useCallback(async () => {
+    await playChord(currentChord.notes);
+    markPromptPlayed();
+  }, [currentChord, markPromptPlayed]);
 
   return (
     <div style={{ textAlign: "center", padding: "16px" }}>
@@ -48,6 +50,9 @@ export function AppPlayMode({ enabledChords, onBack }: AppPlayModeProps) {
 
       <button
         onClick={handlePlay}
+        onPointerDown={() => {
+          void prepareAudioPlayback();
+        }}
         disabled={!ready}
         style={{
           fontSize: "2rem",
@@ -71,7 +76,7 @@ export function AppPlayMode({ enabledChords, onBack }: AppPlayModeProps) {
       <AnswerPanel
         chords={choices}
         revealedId={revealedId}
-        disabled={answered}
+        disabled={answerDisabled}
         onAnswer={handleAnswer}
       />
 
