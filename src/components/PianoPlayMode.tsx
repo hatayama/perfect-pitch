@@ -1,28 +1,87 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import type { ChordDefinition } from "../constants/chords";
-import { playChord, initSampler } from "../audio/ChordPlayer";
+import { memo, useEffect, useState } from "react";
+import { ALL_CHORDS, type ChordDefinition } from "../constants/chords";
+import { playChord, initSampler, prepareAudioPlayback } from "../audio/ChordPlayer";
 import { useVolume } from "../hooks/useVolume";
-import { assert } from "../utils/assert";
 import { PianoKeyboard } from "./PianoKeyboard";
 import { BackButton } from "./BackButton";
 import { VolumeSlider } from "./VolumeSlider";
 
 interface PianoPlayModeProps {
-  readonly enabledChords: readonly ChordDefinition[];
   readonly onBack: () => void;
 }
 
-export function PianoPlayMode({ enabledChords, onBack }: PianoPlayModeProps) {
-  assert(enabledChords.length > 0, "enabledChords must not be empty");
+function getHighlightColor(colorHex: string): string {
+  // 黒(#212121)だと鍵盤のハイライトが見えにくいため、少し明るいグレーを使う
+  return colorHex === "#212121" ? "#666" : colorHex;
+}
 
-  const [selectedChord, setSelectedChord] = useState<ChordDefinition>(enabledChords[0]);
+function handlePointerDown(): void {
+  void prepareAudioPlayback();
+}
 
-  // enabledChordsが変更された場合、selectedChordが無効になる可能性があるためフォールバック
-  const activeChord: ChordDefinition = useMemo(() => {
-    const stillValid: boolean = enabledChords.some((c: ChordDefinition) => c.id === selectedChord.id);
-    return stillValid ? selectedChord : enabledChords[0];
-  }, [enabledChords, selectedChord]);
+interface ChordCardProps {
+  readonly chord: ChordDefinition;
+  readonly ready: boolean;
+}
 
+const ChordCard = memo(function ChordCard({ chord, ready }: ChordCardProps) {
+  const highlightColor: string = getHighlightColor(chord.colorHex);
+  return (
+    <div
+      style={{
+        width: "100%",
+        maxWidth: "600px",
+        padding: "12px",
+        borderRadius: "12px",
+        backgroundColor: "var(--bg-card)",
+        border: "1px solid var(--border-subtle)",
+      }}
+    >
+      <div style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        marginBottom: "8px",
+      }}>
+        <div style={{
+          padding: "6px 16px",
+          backgroundColor: chord.colorHex,
+          color: chord.textColor,
+          borderRadius: "8px",
+          fontSize: "0.95rem",
+          fontWeight: "bold",
+        }}>
+          {chord.colorName} — {chord.label}
+        </div>
+        <button
+          onClick={() => playChord(chord.notes)}
+          onPointerDown={handlePointerDown}
+          disabled={!ready}
+          style={{
+            width: "44px",
+            height: "44px",
+            borderRadius: "50%",
+            border: "none",
+            backgroundColor: ready ? "var(--btn-play)" : "var(--bg-disabled)",
+            color: "#fff",
+            fontSize: "1.2rem",
+            cursor: ready ? "pointer" : "default",
+            boxShadow: "0 2px 8px var(--btn-play-shadow)",
+            flexShrink: 0,
+          }}
+        >
+          {ready ? "♪" : "..."}
+        </button>
+      </div>
+      <PianoKeyboard
+        highlightNotes={chord.notes}
+        highlightColor={highlightColor}
+      />
+    </div>
+  );
+});
+
+export function PianoPlayMode({ onBack }: PianoPlayModeProps) {
   const { volume, updateVolume } = useVolume();
   const [ready, setReady] = useState<boolean>(false);
 
@@ -30,103 +89,23 @@ export function PianoPlayMode({ enabledChords, onBack }: PianoPlayModeProps) {
     initSampler().then(() => setReady(true));
   }, []);
 
-  const handlePlay = useCallback(() => {
-    playChord(activeChord.notes);
-  }, [activeChord]);
-
-  // 黒(#212121)だと鍵盤のハイライトが見えにくいため、少し明るいグレーを使う
-  const highlightColor: string = activeChord.colorHex === "#212121"
-    ? "#666"
-    : activeChord.colorHex;
-
   return (
-    <div style={{ textAlign: "center", padding: "16px" }}>
+    <div style={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      padding: "16px",
+      gap: "16px",
+    }}>
       <BackButton onClick={onBack} />
 
-      <h2 style={{ marginTop: "48px", fontSize: "1.4rem", color: "var(--text-primary)" }}>
-        ひく おとを えらんでね
-      </h2>
-
-      {/* 色ボタン一覧 */}
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(80px, 1fr))",
-        gap: "8px",
-        maxWidth: "500px",
-        margin: "16px auto 24px",
-        padding: "0 8px",
-      }}>
-        {enabledChords.map((chord: ChordDefinition) => {
-          const isSelected: boolean = chord.id === activeChord.id;
-          return (
-            <button
-              key={chord.id}
-              onClick={() => setSelectedChord(chord)}
-              style={{
-                backgroundColor: chord.colorHex,
-                color: chord.textColor,
-                border: isSelected ? "3px solid var(--text-primary)" : "3px solid transparent",
-                borderRadius: "12px",
-                padding: "12px 8px",
-                fontSize: "0.85rem",
-                fontWeight: "bold",
-                cursor: "pointer",
-                opacity: isSelected ? 1 : 0.7,
-                transform: isSelected ? "scale(1.05)" : "scale(1)",
-                transition: "transform 0.15s ease, opacity 0.15s ease",
-              }}
-            >
-              {chord.colorName}
-            </button>
-          );
-        })}
+      <div style={{ marginTop: "48px", width: "100%", maxWidth: "500px" }}>
+        <VolumeSlider volume={volume} onChangeVolume={updateVolume} />
       </div>
 
-      {/* 選択中の和音情報 */}
-      <div style={{
-        margin: "0 auto 16px",
-        padding: "12px 24px",
-        backgroundColor: activeChord.colorHex,
-        color: activeChord.textColor,
-        borderRadius: "12px",
-        display: "inline-block",
-        fontSize: "1.3rem",
-        fontWeight: "bold",
-      }}>
-        {activeChord.colorName} — {activeChord.label}
-      </div>
-
-      {/* 再生ボタン */}
-      <button
-        onClick={handlePlay}
-        disabled={!ready}
-        style={{
-          fontSize: "2rem",
-          padding: "16px",
-          borderRadius: "50%",
-          border: "none",
-          backgroundColor: ready ? "var(--btn-play)" : "var(--bg-disabled)",
-          color: "#fff",
-          cursor: ready ? "pointer" : "default",
-          width: "80px",
-          height: "80px",
-          margin: "0 auto 16px",
-          boxShadow: "0 4px 12px var(--btn-play-shadow)",
-          display: "block",
-        }}
-      >
-        {ready ? "♪" : "..."}
-      </button>
-
-      <VolumeSlider volume={volume} onChangeVolume={updateVolume} />
-
-      {/* ピアノ鍵盤 */}
-      <div style={{ margin: "0 auto", padding: "0 8px" }}>
-        <PianoKeyboard
-          highlightNotes={activeChord.notes}
-          highlightColor={highlightColor}
-        />
-      </div>
+      {ALL_CHORDS.map((chord: ChordDefinition) => (
+        <ChordCard key={chord.id} chord={chord} ready={ready} />
+      ))}
     </div>
   );
 }
