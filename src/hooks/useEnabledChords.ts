@@ -1,28 +1,32 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ALL_CHORDS, type ChordDefinition } from "../constants/chords";
 import { assert } from "../utils/assert";
 
 const STORAGE_KEY = "perfect-pitch-enabled-chords";
 
 const ALL_CHORD_IDS: ReadonlySet<string> = new Set(ALL_CHORDS.map((c: ChordDefinition) => c.id));
-const DEFAULT_ENABLED_CHORD_IDS: ReadonlySet<string> = new Set<string>([
+const DEFAULT_ENABLED_CHORD_IDS: readonly string[] = [
   "do-mi-so",
   "do-fa-ra",
-]);
+] as const;
 
 // 旧バージョンのLocalStorageキーを削除（モジュール読み込み時に1回だけ実行）
 localStorage.removeItem("perfect-pitch-progress");
 localStorage.removeItem("perfect-pitch-level-up-days");
 
+function createDefaultEnabledIds(): ReadonlySet<string> {
+  return new Set<string>(DEFAULT_ENABLED_CHORD_IDS);
+}
+
 function loadEnabledIds(): ReadonlySet<string> {
   const stored: string | null = localStorage.getItem(STORAGE_KEY);
   if (stored === null) {
-    return DEFAULT_ENABLED_CHORD_IDS;
+    return createDefaultEnabledIds();
   }
 
   const parsed: unknown = JSON.parse(stored);
   if (!Array.isArray(parsed) || parsed.length === 0) {
-    return DEFAULT_ENABLED_CHORD_IDS;
+    return createDefaultEnabledIds();
   }
 
   // 現在のALL_CHORDSに存在するIDのみを残す
@@ -31,7 +35,7 @@ function loadEnabledIds(): ReadonlySet<string> {
   );
 
   if (validIds.size === 0) {
-    return DEFAULT_ENABLED_CHORD_IDS;
+    return createDefaultEnabledIds();
   }
 
   assert(validIds.size > 0, "loadEnabledIds must return non-empty set");
@@ -44,6 +48,10 @@ function saveEnabledIds(ids: ReadonlySet<string>): void {
 
 export function useEnabledChords() {
   const [enabledChordIds, setEnabledChordIds] = useState<ReadonlySet<string>>(loadEnabledIds);
+
+  useEffect(() => {
+    saveEnabledIds(enabledChordIds);
+  }, [enabledChordIds]);
 
   const enabledChords: readonly ChordDefinition[] = useMemo(
     () => ALL_CHORDS.filter((c: ChordDefinition) => enabledChordIds.has(c.id)),
@@ -64,14 +72,12 @@ export function useEnabledChords() {
         next.add(chordId);
       }
 
-      saveEnabledIds(next);
       return next;
     });
   }, []);
 
   const resetToDefault = useCallback(() => {
-    saveEnabledIds(DEFAULT_ENABLED_CHORD_IDS);
-    setEnabledChordIds(DEFAULT_ENABLED_CHORD_IDS);
+    setEnabledChordIds(createDefaultEnabledIds());
   }, []);
 
   return {

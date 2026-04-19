@@ -1,5 +1,28 @@
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { QRCodeSVG } from "qrcode.react";
+
+const homeActionButtonStyle: CSSProperties = {
+  fontSize: "1.3rem",
+  fontWeight: 800,
+  letterSpacing: "0.03em",
+  whiteSpace: "nowrap",
+  padding: "20px 32px",
+  borderRadius: "20px",
+  border: "none",
+  color: "#fff",
+  cursor: "pointer",
+  width: "100%",
+  maxWidth: "340px",
+};
+
+const subtleSettingsButtonStyle: CSSProperties = {
+  ...homeActionButtonStyle,
+  fontSize: "1rem",
+  fontWeight: 700,
+  marginTop: "32px",
+  backgroundColor: "var(--btn-subtle)",
+  boxShadow: "0 4px 12px var(--btn-subtle-shadow)",
+};
 
 function QrSection() {
   const [showQr, setShowQr] = useState<boolean>(false);
@@ -67,18 +90,8 @@ export function HomeScreen({
         <button
           onClick={onStartAppMode}
           style={{
-            fontSize: "1.3rem",
-            fontWeight: 800,
-            letterSpacing: "0.03em",
-            whiteSpace: "nowrap",
-            padding: "20px 32px",
-            borderRadius: "20px",
-            border: "none",
+            ...homeActionButtonStyle,
             backgroundColor: "#2196F3",
-            color: "#fff",
-            cursor: "pointer",
-            width: "100%",
-            maxWidth: "340px",
             boxShadow: "0 4px 12px rgba(33,150,243,0.3)",
           }}
         >
@@ -88,18 +101,8 @@ export function HomeScreen({
         <button
           onClick={onStartPianoMode}
           style={{
-            fontSize: "1.3rem",
-            fontWeight: 800,
-            letterSpacing: "0.03em",
-            whiteSpace: "nowrap",
-            padding: "20px 32px",
-            borderRadius: "20px",
-            border: "none",
+            ...homeActionButtonStyle,
             backgroundColor: "#4CAF50",
-            color: "#fff",
-            cursor: "pointer",
-            width: "100%",
-            maxWidth: "340px",
             boxShadow: "0 4px 12px rgba(76,175,80,0.3)",
           }}
         >
@@ -116,15 +119,7 @@ export function HomeScreen({
       {/* 設定ボタン（親向け） */}
       <button
         onClick={onOpenSettings}
-        style={{
-          marginTop: "48px",
-          fontSize: "0.85rem",
-          color: "var(--text-tertiary)",
-          background: "none",
-          border: "none",
-          cursor: "pointer",
-          textDecoration: "underline",
-        }}
+        style={subtleSettingsButtonStyle}
       >
         せってい
       </button>

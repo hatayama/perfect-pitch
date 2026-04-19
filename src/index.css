@@ -27,6 +27,8 @@
   --slider-shell: rgba(255, 255, 255, 0.08);
   --theme-toggle-shell: rgba(255, 255, 255, 0.08);
   --theme-icon-contrast: rgba(18, 18, 18, 0.55);
+  --btn-subtle: #5f6b73;
+  --btn-subtle-shadow: rgba(95, 107, 115, 0.34);
 }
 
 [data-theme="light"] {
@@ -58,6 +60,8 @@
   --slider-shell: rgba(47, 140, 255, 0.08);
   --theme-toggle-shell: rgba(47, 140, 255, 0.08);
   --theme-icon-contrast: rgba(51, 51, 51, 0.6);
+  --btn-subtle: #8b95a1;
+  --btn-subtle-shadow: rgba(139, 149, 161, 0.28);
 }
 
 * {
