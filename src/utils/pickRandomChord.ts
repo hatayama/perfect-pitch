@@ -1,28 +1,25 @@
 import type { ChordDefinition } from "../constants/chords";
+import { assert } from "./assert";
 
-// 覚えた和音ほど多く出題する重み付きランダム選択
-// インデックスが小さい（古い）ほど重みが大きい
 export function pickRandomChord(
   chords: readonly ChordDefinition[],
   lastChordId: string | null,
 ): ChordDefinition {
-  const weights: number[] = chords.map((_: ChordDefinition, i: number) => chords.length - i);
-  const totalWeight: number = weights.reduce((sum: number, w: number) => sum + w, 0);
+  assert(chords.length > 0, "chords must not be empty");
 
-  let attempts = 0;
-  while (attempts < 20) {
-    let random: number = Math.random() * totalWeight;
-    for (let i = 0; i < chords.length; i++) {
-      random -= weights[i];
-      if (random <= 0) {
-        if (chords.length > 1 && chords[i].id === lastChordId) {
-          break;
-        }
-        return chords[i];
-      }
-    }
-    attempts++;
+  if (chords.length === 1) {
+    return chords[0];
   }
 
-  return chords[0];
+  const candidates: readonly ChordDefinition[] = lastChordId === null
+    ? chords
+    : chords.filter((chord: ChordDefinition) => chord.id !== lastChordId);
+
+  assert(candidates.length > 0, "candidates must not be empty");
+
+  const selectedIndex: number = Math.floor(Math.random() * candidates.length);
+  const selectedChord: ChordDefinition | undefined = candidates[selectedIndex];
+  assert(selectedChord !== undefined, "selected chord must exist");
+
+  return selectedChord;
 }
