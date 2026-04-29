@@ -234,11 +234,13 @@ button {
 }
 
 .answer-panel {
+  --answer-button-size: clamp(56px, 10dvh, 88px);
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
-  grid-auto-rows: clamp(56px, 10dvh, 88px);
+  grid-template-columns: repeat(auto-fit, var(--answer-button-size));
+  grid-auto-rows: var(--answer-button-size);
   gap: 8px;
   align-self: start;
+  justify-content: center;
   width: min(100%, 500px);
   min-height: 0;
   margin: 0 auto;
