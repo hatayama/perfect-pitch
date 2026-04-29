@@ -10,14 +10,7 @@ interface AnswerPanelProps {
 
 export function AnswerPanel({ chords, revealedId, disabled, onAnswer }: AnswerPanelProps) {
   return (
-    <div style={{
-      display: "grid",
-      gridTemplateColumns: "repeat(auto-fill, minmax(100px, 1fr))",
-      gap: "12px",
-      padding: "16px",
-      maxWidth: "500px",
-      margin: "0 auto",
-    }}>
+    <div className="answer-panel">
       {chords.map((chord: ChordDefinition) => (
         <ColorFlag
           key={chord.id}

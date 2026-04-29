@@ -2,15 +2,14 @@ import type { ReactNode } from "react";
 
 interface PageLayoutProps {
   readonly children: ReactNode;
+  readonly disableScroll?: boolean;
 }
 
-export function PageLayout({ children }: PageLayoutProps) {
+export function PageLayout({ children, disableScroll = false }: PageLayoutProps) {
+  const className: string = disableScroll ? "page-layout page-layout--no-scroll" : "page-layout";
+
   return (
-    <div style={{
-      minHeight: "100dvh",
-      backgroundColor: "var(--bg-page)",
-      fontFamily: "'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif",
-    }}>
+    <div className={className}>
       {children}
     </div>
   );

@@ -17,7 +17,7 @@ function AppPlayPage() {
   }, []);
 
   return (
-    <PageLayout>
+    <PageLayout disableScroll>
       <ThemeToggle theme={theme} onToggle={toggleTheme} />
       <AppPlayMode
         enabledChords={enabledChords}

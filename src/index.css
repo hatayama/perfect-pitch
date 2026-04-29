@@ -79,6 +79,17 @@ body {
   overscroll-behavior: none;
 }
 
+.page-layout {
+  min-height: 100dvh;
+  background-color: var(--bg-page);
+  font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+}
+
+.page-layout--no-scroll {
+  height: 100dvh;
+  overflow: hidden;
+}
+
 #root {
   width: 100%;
   max-width: 100%;
@@ -181,6 +192,98 @@ button {
   border-radius: 50%;
   background: radial-gradient(circle at 35% 35%, #ffffff 0%, var(--slider-thumb) 70%);
   box-shadow: 0 4px 12px var(--slider-thumb-shadow);
+}
+
+.app-play-mode {
+  display: grid;
+  grid-template-rows: auto auto auto minmax(0, 1fr);
+  align-items: center;
+  justify-items: center;
+  height: 100%;
+  padding: 16px;
+  row-gap: 10px;
+  overflow: hidden;
+  text-align: center;
+}
+
+.app-play-mode__title {
+  margin: 44px 0 0;
+  color: var(--text-primary);
+  font-size: 1.6rem;
+}
+
+.app-play-mode__play-button {
+  width: 96px;
+  height: 96px;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--bg-disabled);
+  color: #fff;
+  cursor: default;
+  font-size: 2rem;
+  box-shadow: 0 4px 12px var(--btn-play-shadow);
+}
+
+.app-play-mode__play-button--ready {
+  background-color: var(--btn-play);
+  cursor: pointer;
+}
+
+.app-play-mode .volume-slider {
+  margin-bottom: 0;
+}
+
+.answer-panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
+  grid-auto-rows: minmax(0, 1fr);
+  gap: 8px;
+  align-self: stretch;
+  width: min(100%, 500px);
+  min-height: 0;
+  margin: 0 auto;
+}
+
+.color-flag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+  padding: 8px;
+  border-radius: 12px;
+  font-size: 1.05rem;
+  font-weight: bold;
+  line-height: 1.2;
+  transition: transform 0.15s ease;
+}
+
+@media (max-height: 650px) {
+  .app-play-mode {
+    row-gap: 8px;
+  }
+
+  .app-play-mode__title {
+    margin-top: 36px;
+    font-size: 1.4rem;
+  }
+
+  .app-play-mode__play-button {
+    width: 76px;
+    height: 76px;
+    font-size: 1.6rem;
+  }
+
+  .answer-panel {
+    gap: 6px;
+  }
+
+  .color-flag {
+    border-radius: 10px;
+    font-size: 0.95rem;
+  }
 }
 
 @keyframes fadeIn {

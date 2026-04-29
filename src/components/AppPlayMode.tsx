@@ -40,33 +40,25 @@ export function AppPlayMode({ enabledChords, onBack }: AppPlayModeProps) {
     markPromptPlayed();
   }, [currentChord, markPromptPlayed]);
 
+  const playButtonClassName: string = ready
+    ? "app-play-mode__play-button app-play-mode__play-button--ready"
+    : "app-play-mode__play-button";
+
   return (
-    <div style={{ textAlign: "center", padding: "16px" }}>
+    <div className="app-play-mode">
       <BackButton onClick={onBack} />
 
-      <h2 style={{ marginTop: "48px", fontSize: "1.6rem", color: "var(--text-primary)" }}>
+      <h2 className="app-play-mode__title">
         きいてみよう！
       </h2>
 
       <button
+        className={playButtonClassName}
         onClick={handlePlay}
         onPointerDown={() => {
           void prepareAudioPlayback();
         }}
         disabled={!ready}
-        style={{
-          fontSize: "2rem",
-          padding: "20px 48px",
-          borderRadius: "50%",
-          border: "none",
-          backgroundColor: ready ? "var(--btn-play)" : "var(--bg-disabled)",
-          color: "#fff",
-          cursor: ready ? "pointer" : "default",
-          margin: "16px 0 32px",
-          width: "100px",
-          height: "100px",
-          boxShadow: "0 4px 12px var(--btn-play-shadow)",
-        }}
       >
         {ready ? "♪" : "..."}
       </button>

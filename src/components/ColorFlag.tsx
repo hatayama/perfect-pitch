@@ -35,19 +35,10 @@ export function ColorFlag({ chord, revealed, onClick, disabled }: ColorFlagProps
 
   return (
     <button
+      className="color-flag"
       onClick={onClick}
       disabled={disabled}
       style={{
-        borderRadius: "16px",
-        padding: "24px 16px",
-        fontSize: "1.4rem",
-        fontWeight: "bold",
-        minWidth: "100px",
-        minHeight: "100px",
-        transition: "transform 0.15s ease",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
         ...disabledStyle,
       }}
       onPointerDown={(e) => {
