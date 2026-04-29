@@ -236,9 +236,9 @@ button {
 .answer-panel {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
-  grid-auto-rows: minmax(0, 1fr);
+  grid-auto-rows: clamp(56px, 10dvh, 88px);
   gap: 8px;
-  align-self: stretch;
+  align-self: start;
   width: min(100%, 500px);
   min-height: 0;
   margin: 0 auto;
