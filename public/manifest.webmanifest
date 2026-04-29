@@ -1,0 +1,18 @@
+{
+  "name": "ぜったいおんかん れんしゅう",
+  "short_name": "ぜったいおんかん",
+  "start_url": "/perfect-pitch/app-play/",
+  "scope": "/perfect-pitch/",
+  "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone"],
+  "background_color": "#121212",
+  "theme_color": "#121212",
+  "icons": [
+    {
+      "src": "/perfect-pitch/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

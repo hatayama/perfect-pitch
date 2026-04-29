@@ -13,6 +13,15 @@ function AppPlayPage() {
   const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+    document.body.classList.add("app-play-scroll-lock");
+
+    return () => {
+      document.body.classList.remove("app-play-scroll-lock");
+    };
+  }, []);
+
+  useEffect(() => {
     initSampler();
   }, []);
 
