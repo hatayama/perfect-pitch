@@ -1,4 +1,4 @@
-// ピアノ鍵盤をSVGで描画し、指定された音をハイライトする
+import { assert } from "../utils/assert";
 
 interface PianoKeyboardProps {
   readonly highlightNotes: readonly string[];
@@ -12,10 +12,14 @@ interface KeyLayout {
 }
 
 const WHITE_KEY_WIDTH = 40;
+const WHITE_KEY_VISIBLE_WIDTH = 38;
 const KEY_HEIGHT_SCALE = 0.5;
 const WHITE_KEY_HEIGHT = 150 * KEY_HEIGHT_SCALE;
 const BLACK_KEY_HEIGHT = 95 * KEY_HEIGHT_SCALE;
 const BLACK_KEY_WIDTH = 26;
+const ORIGIN_NOTE = "C4";
+const ORIGIN_MARKER_RADIUS = 5;
+const ORIGIN_MARKER_PADDING_BOTTOM = 12;
 
 function buildKeyLayout(): KeyLayout[] {
   const whiteNotes: string[] = ["C", "D", "E", "F", "G", "A", "B"];
@@ -72,6 +76,10 @@ const ALL_KEYS: KeyLayout[] = buildKeyLayout();
 const WHITE_KEYS: KeyLayout[] = ALL_KEYS.filter((k: KeyLayout) => !k.isBlack);
 const BLACK_KEYS: KeyLayout[] = ALL_KEYS.filter((k: KeyLayout) => k.isBlack);
 const TOTAL_WIDTH: number = WHITE_KEYS.length * WHITE_KEY_WIDTH;
+const ORIGIN_KEY: KeyLayout | undefined = WHITE_KEYS.find((key: KeyLayout) => key.note === ORIGIN_NOTE);
+assert(ORIGIN_KEY !== undefined, "origin key must exist");
+const ORIGIN_MARKER_X: number = ORIGIN_KEY.x + WHITE_KEY_VISIBLE_WIDTH / 2;
+const ORIGIN_MARKER_Y: number = WHITE_KEY_HEIGHT - ORIGIN_MARKER_PADDING_BOTTOM;
 
 function isNoteHighlighted(keyNote: string, highlightNotes: readonly string[]): boolean {
   const normalized: string = normalizeNote(keyNote);
@@ -91,7 +99,7 @@ export function PianoKeyboard({ highlightNotes, highlightColor }: PianoKeyboardP
             key={key.note}
             x={key.x}
             y={0}
-            width={38}
+            width={WHITE_KEY_VISIBLE_WIDTH}
             height={WHITE_KEY_HEIGHT}
             rx={0}
             ry={4}
@@ -122,6 +130,16 @@ export function PianoKeyboard({ highlightNotes, highlightColor }: PianoKeyboardP
           />
         );
       })}
+      <circle
+        cx={ORIGIN_MARKER_X}
+        cy={ORIGIN_MARKER_Y}
+        r={ORIGIN_MARKER_RADIUS}
+        style={{
+          fill: "var(--error)",
+          stroke: "#fff",
+          strokeWidth: 1.5,
+        }}
+      />
     </svg>
   );
 }
