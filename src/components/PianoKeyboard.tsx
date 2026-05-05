@@ -149,7 +149,7 @@ export function PianoKeyboard({ highlightNotes, highlightColor }: PianoKeyboardP
         r={KEY_MARKER_RADIUS}
         style={{
           fill: "var(--piano-origin-marker)",
-          stroke: "var(--piano-marker-stroke)",
+          stroke: "var(--piano-origin-marker-stroke)",
           strokeWidth: 1.5,
         }}
       />
@@ -161,7 +161,7 @@ export function PianoKeyboard({ highlightNotes, highlightColor }: PianoKeyboardP
           r={KEY_MARKER_RADIUS}
           style={{
             fill: "var(--piano-reference-marker)",
-            stroke: "var(--piano-marker-stroke)",
+            stroke: "var(--piano-reference-marker-stroke)",
             strokeWidth: 1.5,
           }}
         />

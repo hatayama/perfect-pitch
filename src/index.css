@@ -16,8 +16,9 @@
   --piano-black: #1a1a1a;
   --piano-black-stroke: #333;
   --piano-origin-marker: #EF5350;
+  --piano-origin-marker-stroke: #FF8A80;
   --piano-reference-marker: #1E88E5;
-  --piano-marker-stroke: #fff;
+  --piano-reference-marker-stroke: #64B5F6;
   --btn-play: #546E7A;
   --btn-play-shadow: rgba(84,110,122,0.4);
   --error: #EF5350;
@@ -52,8 +53,9 @@
   --piano-black: #222;
   --piano-black-stroke: #000;
   --piano-origin-marker: #E53935;
+  --piano-origin-marker-stroke: #EF9A9A;
   --piano-reference-marker: #1E88E5;
-  --piano-marker-stroke: #fff;
+  --piano-reference-marker-stroke: #64B5F6;
   --btn-play: #546E7A;
   --btn-play-shadow: rgba(84,110,122,0.3);
   --error: #E53935;
