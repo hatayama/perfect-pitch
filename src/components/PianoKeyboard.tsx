@@ -17,9 +17,10 @@ const KEY_HEIGHT_SCALE = 0.5;
 const WHITE_KEY_HEIGHT = 150 * KEY_HEIGHT_SCALE;
 const BLACK_KEY_HEIGHT = 95 * KEY_HEIGHT_SCALE;
 const BLACK_KEY_WIDTH = 26;
+const DO_NOTE_PREFIX = "C";
 const ORIGIN_NOTE = "C4";
-const ORIGIN_MARKER_RADIUS = 5;
-const ORIGIN_MARKER_PADDING_BOTTOM = 12;
+const KEY_MARKER_RADIUS = 5;
+const KEY_MARKER_PADDING_BOTTOM = 12;
 
 function buildKeyLayout(): KeyLayout[] {
   const whiteNotes: string[] = ["C", "D", "E", "F", "G", "A", "B"];
@@ -76,14 +77,26 @@ const ALL_KEYS: KeyLayout[] = buildKeyLayout();
 const WHITE_KEYS: KeyLayout[] = ALL_KEYS.filter((k: KeyLayout) => !k.isBlack);
 const BLACK_KEYS: KeyLayout[] = ALL_KEYS.filter((k: KeyLayout) => k.isBlack);
 const TOTAL_WIDTH: number = WHITE_KEYS.length * WHITE_KEY_WIDTH;
-const ORIGIN_KEY: KeyLayout | undefined = WHITE_KEYS.find((key: KeyLayout) => key.note === ORIGIN_NOTE);
-assert(ORIGIN_KEY !== undefined, "origin key must exist");
-const ORIGIN_MARKER_X: number = ORIGIN_KEY.x + WHITE_KEY_VISIBLE_WIDTH / 2;
-const ORIGIN_MARKER_Y: number = WHITE_KEY_HEIGHT - ORIGIN_MARKER_PADDING_BOTTOM;
+const ORIGIN_KEY: KeyLayout = findOriginKey();
+const REFERENCE_DO_KEYS: KeyLayout[] = WHITE_KEYS.filter((key: KeyLayout) => {
+  return key.note.startsWith(DO_NOTE_PREFIX) && key.note !== ORIGIN_NOTE;
+});
+assert(REFERENCE_DO_KEYS.length > 0, "reference do keys must exist");
+const KEY_MARKER_Y: number = WHITE_KEY_HEIGHT - KEY_MARKER_PADDING_BOTTOM;
 
 function isNoteHighlighted(keyNote: string, highlightNotes: readonly string[]): boolean {
   const normalized: string = normalizeNote(keyNote);
   return highlightNotes.some((hn: string) => normalized === normalizeNote(hn));
+}
+
+function findOriginKey(): KeyLayout {
+  const originKey: KeyLayout | undefined = WHITE_KEYS.find((key: KeyLayout) => key.note === ORIGIN_NOTE);
+  assert(originKey !== undefined, "origin key must exist");
+  return originKey;
+}
+
+function getKeyMarkerX(key: KeyLayout): number {
+  return key.x + WHITE_KEY_VISIBLE_WIDTH / 2;
 }
 
 export function PianoKeyboard({ highlightNotes, highlightColor }: PianoKeyboardProps) {
@@ -131,15 +144,28 @@ export function PianoKeyboard({ highlightNotes, highlightColor }: PianoKeyboardP
         );
       })}
       <circle
-        cx={ORIGIN_MARKER_X}
-        cy={ORIGIN_MARKER_Y}
-        r={ORIGIN_MARKER_RADIUS}
+        cx={getKeyMarkerX(ORIGIN_KEY)}
+        cy={KEY_MARKER_Y}
+        r={KEY_MARKER_RADIUS}
         style={{
-          fill: "var(--error)",
-          stroke: "#fff",
+          fill: "var(--piano-origin-marker)",
+          stroke: "var(--piano-marker-stroke)",
           strokeWidth: 1.5,
         }}
       />
+      {REFERENCE_DO_KEYS.map((key: KeyLayout) => (
+        <circle
+          key={`${key.note}-marker`}
+          cx={getKeyMarkerX(key)}
+          cy={KEY_MARKER_Y}
+          r={KEY_MARKER_RADIUS}
+          style={{
+            fill: "var(--piano-reference-marker)",
+            stroke: "var(--piano-marker-stroke)",
+            strokeWidth: 1.5,
+          }}
+        />
+      ))}
     </svg>
   );
 }
