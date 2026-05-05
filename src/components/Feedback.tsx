@@ -3,29 +3,28 @@ import { ChordPianoKeyboard } from "./ChordPianoKeyboard";
 
 interface FeedbackProps {
   readonly correct: boolean | null;
+  readonly dismissible: boolean;
   readonly correctChord: ChordDefinition | null;
-  readonly onDismissCorrect: () => void;
+  readonly onDismiss: () => void;
 }
 
-export function Feedback({ correct, correctChord, onDismissCorrect }: FeedbackProps) {
+export function Feedback({ correct, dismissible, correctChord, onDismiss }: FeedbackProps) {
   if (correct === null) {
     return null;
   }
 
-  const dismissable: boolean = correct;
-
   return (
     <div
-      role={dismissable ? "button" : undefined}
-      tabIndex={dismissable ? 0 : undefined}
-      aria-label={dismissable ? "正解表示を閉じる" : undefined}
-      onClick={dismissable ? onDismissCorrect : undefined}
+      role={dismissible ? "button" : undefined}
+      tabIndex={dismissible ? 0 : undefined}
+      aria-label={dismissible ? "結果表示を閉じる" : undefined}
+      onClick={dismissible ? onDismiss : undefined}
       onKeyDown={(event) => {
-        if (!dismissable) return;
+        if (!dismissible) return;
         if (event.key !== "Enter" && event.key !== " ") return;
 
         event.preventDefault();
-        onDismissCorrect();
+        onDismiss();
       }}
       style={{
         position: "fixed",
@@ -38,8 +37,8 @@ export function Feedback({ correct, correctChord, onDismissCorrect }: FeedbackPr
         justifyContent: "center",
         backgroundColor: "rgba(0, 0, 0, 0.3)",
         zIndex: 100,
-        pointerEvents: dismissable ? "auto" : "none",
-        cursor: dismissable ? "pointer" : "default",
+        pointerEvents: "auto",
+        cursor: dismissible ? "pointer" : "default",
         animation: "fadeIn 0.2s ease",
       }}
     >

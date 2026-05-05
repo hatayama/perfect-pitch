@@ -18,11 +18,13 @@ export function AppPlayMode({ enabledChords, onBack }: AppPlayModeProps) {
   const {
     currentChord,
     feedbackResult,
+    feedbackDismissible,
     revealedId,
     answerDisabled,
     handleAnswer,
     markPromptPlayed,
     dismissCorrectFeedback,
+    dismissIncorrectFeedback,
   } = useQuizFlow(enabledChords);
 
   const choices: readonly ChordDefinition[] = useMemo(
@@ -75,8 +77,9 @@ export function AppPlayMode({ enabledChords, onBack }: AppPlayModeProps) {
 
       <Feedback
         correct={feedbackResult}
+        dismissible={feedbackDismissible}
         correctChord={feedbackResult === true ? currentChord : null}
-        onDismissCorrect={dismissCorrectFeedback}
+        onDismiss={feedbackResult === true ? dismissCorrectFeedback : dismissIncorrectFeedback}
       />
     </div>
   );
