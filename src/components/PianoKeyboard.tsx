@@ -12,8 +12,9 @@ interface KeyLayout {
 }
 
 const WHITE_KEY_WIDTH = 40;
-const WHITE_KEY_HEIGHT = 150;
-const BLACK_KEY_HEIGHT = 95;
+const KEY_HEIGHT_SCALE = 0.5;
+const WHITE_KEY_HEIGHT = 150 * KEY_HEIGHT_SCALE;
+const BLACK_KEY_HEIGHT = 95 * KEY_HEIGHT_SCALE;
 const BLACK_KEY_WIDTH = 26;
 
 function buildKeyLayout(): KeyLayout[] {
