@@ -3,7 +3,6 @@ import type { ChordDefinition } from "../constants/chords";
 import { playCorrectSe, playIncorrectSe } from "../audio/ChordPlayer";
 import { pickRandomChord } from "../utils/pickRandomChord";
 
-const FEEDBACK_DELAY_CORRECT = 1500;
 const FEEDBACK_DELAY_INCORRECT = 2000;
 type QuizPhase = "waitingForPrompt" | "readyToAnswer" | "showingCorrect" | "showingIncorrect";
 
@@ -14,6 +13,7 @@ interface QuizFlowResult {
   answerDisabled: boolean;
   handleAnswer: (selected: ChordDefinition) => void;
   markPromptPlayed: () => void;
+  dismissCorrectFeedback: () => void;
 }
 
 export function useQuizFlow(
@@ -37,6 +37,21 @@ export function useQuizFlow(
 
   useEffect(() => clearPendingTimer, [clearPendingTimer]);
 
+  const completeCorrectAnswer = useCallback(() => {
+    const next: ChordDefinition = pickRandomChord(chords, currentChord.id);
+    setCurrentChord(next);
+    setFeedbackResult(null);
+    setRevealedId(null);
+    setPhase("waitingForPrompt");
+    onCorrectComplete?.();
+  }, [chords, currentChord, onCorrectComplete]);
+
+  const dismissCorrectFeedback = useCallback(() => {
+    if (phase !== "showingCorrect") return;
+
+    completeCorrectAnswer();
+  }, [phase, completeCorrectAnswer]);
+
   const handleAnswer = useCallback((selected: ChordDefinition) => {
     if (phase !== "readyToAnswer") return;
 
@@ -47,6 +62,8 @@ export function useQuizFlow(
       setRevealedId(selected.id);
       setPhase("showingCorrect");
       void playCorrectSe();
+      clearPendingTimer();
+      return;
     } else {
       setPhase("showingIncorrect");
       void playIncorrectSe();
@@ -55,17 +72,9 @@ export function useQuizFlow(
     clearPendingTimer();
     timerRef.current = setTimeout(() => {
       setFeedbackResult(null);
-      if (correct) {
-        const next: ChordDefinition = pickRandomChord(chords, currentChord.id);
-        setCurrentChord(next);
-        setRevealedId(null);
-        setPhase("waitingForPrompt");
-        onCorrectComplete?.();
-      } else {
-        setPhase("readyToAnswer");
-      }
-    }, correct ? FEEDBACK_DELAY_CORRECT : FEEDBACK_DELAY_INCORRECT);
-  }, [phase, currentChord, chords, onCorrectComplete, clearPendingTimer]);
+      setPhase("readyToAnswer");
+    }, FEEDBACK_DELAY_INCORRECT);
+  }, [phase, currentChord, clearPendingTimer]);
 
   const markPromptPlayed = useCallback(() => {
     setPhase((currentPhase: QuizPhase) => (
@@ -80,5 +89,6 @@ export function useQuizFlow(
     answerDisabled: phase !== "readyToAnswer",
     handleAnswer,
     markPromptPlayed,
+    dismissCorrectFeedback,
   };
 }

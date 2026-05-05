@@ -2,17 +2,12 @@ import { memo, useEffect, useState } from "react";
 import { ALL_CHORDS, type ChordDefinition } from "../constants/chords";
 import { playChord, initSampler, prepareAudioPlayback } from "../audio/ChordPlayer";
 import { useVolume } from "../hooks/useVolume";
-import { PianoKeyboard } from "./PianoKeyboard";
+import { ChordPianoKeyboard } from "./ChordPianoKeyboard";
 import { BackButton } from "./BackButton";
 import { VolumeSlider } from "./VolumeSlider";
 
 interface PianoPlayModeProps {
   readonly onBack: () => void;
-}
-
-function getHighlightColor(colorHex: string): string {
-  // 黒(#212121)だと鍵盤のハイライトが見えにくいため、少し明るいグレーを使う
-  return colorHex === "#212121" ? "#666" : colorHex;
 }
 
 function handlePointerDown(): void {
@@ -25,7 +20,6 @@ interface ChordCardProps {
 }
 
 const ChordCard = memo(function ChordCard({ chord, ready }: ChordCardProps) {
-  const highlightColor: string = getHighlightColor(chord.colorHex);
   return (
     <div
       style={{
@@ -73,10 +67,7 @@ const ChordCard = memo(function ChordCard({ chord, ready }: ChordCardProps) {
           {ready ? "♪" : "..."}
         </button>
       </div>
-      <PianoKeyboard
-        highlightNotes={chord.notes}
-        highlightColor={highlightColor}
-      />
+      <ChordPianoKeyboard chord={chord} />
     </div>
   );
 });

@@ -292,6 +292,25 @@ button {
   transition: transform 0.15s ease;
 }
 
+.feedback__correct {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  width: min(88vw, 600px);
+  animation: popIn 0.3s ease;
+}
+
+.feedback__keyboard {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  background: var(--bg-card);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.24);
+}
+
 @media (max-height: 650px) {
   .app-play-mode {
     row-gap: 8px;
